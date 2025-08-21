@@ -1,5 +1,7 @@
 # FX-82au plus II reverse-engineering
 
+> This is still a work in progress
+
 This is a reverse-engineering project for the CASIO FX-82au plus II scientific calculator.
 I'm still new to C so pls don't judge.
 
