@@ -1,0 +1,370 @@
+Jumptable:
+00:	Initial stack pointer
+02:	Initial pc
+04:	brk address
+
+======== Data labels =========
+
+d_00400
+d_00694
+d_00711
+d_00762
+d_00782 # (???)
+d_007CC # (???)
+d_007E6 # (???)
+d_00AD6
+d_0080A # (???)
+d_0080B # (???)
+d_00812 # (???)
+d_00AF4
+d_00AF6
+d_0081D # (???)
+d_00AF8
+d_0081F # (???)
+d_0082C # (???)
+d_0082D # (???)
+d_0082E # (???)
+d_0082F # (???)
+d_00844 # (???)
+d_00B28
+d_00B30
+d_00B35
+d_00B3F
+d_01C64 # (???)
+d_01C6C # (???)
+d_01DB2 # (???)
+d_01DCE # (???)
+d_01DDC # (???)
+d_01DE8 # (???)
+d_01DF4 # (???)
+d_01DF6 # (???)
+d_01E24 # (???)
+d_01E5C # (???)
+d_01E86 # (???)
+d_01E88 # (???)
+d_01F74 # (???)
+d_01FB6 # (???)
+d_01FB8 # (???)
+d_02399 # (???)
+d_023C6 # (???)
+d_023C8 # (???)
+d_023C9 # (???)
+d_023D2 # (???)
+d_023D3 # (???)
+d_023D4 # (???)
+d_023D5 # (???)
+
+d_08000		reg0
+d_08002		reg0.2
+d_08004		reg0.4
+d_08005		reg0.5
+d_08006		reg0.6
+d_08007		reg0.7
+d_08008		reg0.8
+d_08009		reg0.9
+d_0800A
+d_0800B
+d_0800C
+d_0800D
+d_0800E
+d_0800F
+d_08010		reg1
+d_08011		reg1.1
+d_08012		reg1.2
+d_08018		reg1.8
+d_08019		reg1.9
+d_0801A
+d_0801C
+d_0801D
+d_0801E		arith_op       # (-, +, ÷, ×) = 9, 8, 7, 6
+d_0801F
+d_08020		reg2
+d_08022		reg2.2
+d_08029		reg2.9
+d_0802A
+d_0802B
+d_0802C
+d_0802D
+d_0802E
+d_0802F
+d_08030		reg3
+d_08032		reg3.2
+d_08039		reg3.9
+d_0803A
+d_0803B
+d_0803C		reg4
+d_08044		reg4.8
+d_08046		reg5
+d_0804C		reg5.6
+d_08050		reg6
+d_08052		reg6.2
+d_08059		reg6.9
+d_0805A
+d_0805B
+d_0805C		arg0_ref      # functions that manipulate numbers (such as
+d_0805E		arg1_ref      # num_add) save the arguments reference here
+d_080DC
+d_080DD		cursor_noflash
+d_080DE
+d_080DF
+d_080E0 # (???)
+d_080E1 # (???)
+d_080F2
+d_080F4
+d_080F5		last_fn_key  # example: 'sin' = A0, 'sin^-1' = B0
+d_080F7
+d_080F8		modifiers     # 08:shift,04:alpha,02:RCL,01:STO
+d_080F9		mode
+				# comp C1, cmplx C4, stat 3, basen 2, eqn 45, mat 6,
+				# table 58, vct 7, ratio 4A, ineq 4B, dist C, #verif 89
+
+d_080FA		submode       # base-n:(base-1),ineq:(degree+1),stat:1~8,etc.
+d_080FB		screen_state  # normal: 0, mode: 1, setup: 2, hyp/deg...: 3
+d_080FC
+d_080FD
+d_080FE
+d_080FF
+d_08100
+d_08101
+d_08102		setup.number_form   # fix: 8, sci: 9, norm1: 0, norm2: 4
+d_08103		setup.num_ndigit    # for fix and sci mode (0~9)
+d_08104
+d_08105		setup.deg_form      # d: 4, r: 5, g: 6
+d_08106		setup.mthio
+d_08107
+d_08108
+d_08109		setup.stat_freq
+d_0810A		setup.rdec
+d_0810C
+d_08112		setup.contrast
+d_08113
+d_08114		cursor_pos_byte
+d_08115
+d_08116		formula_xcor
+d_08117		formula_ycor
+d_08118		cursor_xcor
+d_08119		cursor_ycor
+d_0811A
+d_0811B
+d_0811C		viewport_table  # 1 or 2 for 4-column tables
+d_0811D		row_in_table    # relative to current viewport
+d_0811E		col_in_table
+d_0811F		font_size
+d_08120		draw_mode
+				# 0: white background
+				# 4: white background (sanitize, only draw inside background)
+				# 1: transparent background
+				# 2: AND with screen
+				# 3 (otherwise): xor with screen
+
+d_08121		use_buffer   # real screen or screen buffer
+d_08124
+d_08126
+d_08127		use_output_charset
+				# example: 0x4E is '×' input but 'N' output
+d_08128
+d_08129
+d_0812A
+d_0812C		formula_ptr   # usually 0x8154
+d_0812E
+d_08130
+d_0821C		random_state  # Used in the random generator. # (???)
+d_08224		timer         # 2-byte value. Part of the random state.
+
+d_08226		var_m # (???)
+d_08230		var_ans # (???)
+d_0823A		var_a # (???)
+d_08244		var_b # (???)
+d_0824E		var_c # (???)
+d_08258		var_d # (???)
+d_08262		var_e # (???)
+d_0826C		var_f # (???)
+d_08276		var_x # (???)
+d_08280		var_y # (???)
+
+d_083FC
+d_083FD
+d_083FE
+
+d_0860E		magic_string  # 15 bytes '0f 0e 0d 0c ... 02 01', the calculator
+				# is reset on startup if this is corrupted
+
+d_087D0		screen_buffer
+d_087D1 	screen_buffer.1
+d_087D2 	screen_buffer.2
+d_087D3 	screen_buffer.3
+d_087D4 	screen_buffer.4
+d_087D5 	screen_buffer.5
+d_087D7 	screen_buffer.7
+d_087D8 	screen_buffer.8
+d_087D9 	screen_buffer.9
+d_087DA 	screen_buffer.A
+d_087DB 	screen_buffer.B
+
+d_08DF2		# initial sp value
+
+======= SFRs =======
+
+From	To		R/W		Description
+0xF000			R/W		DSR
+0xF008			W		STPACP
+0xF009			W		SBYCON
+0xF00A					Unknown SFRs
+0xF00B	0xF013			?
+0xF014			R/W		? (maybe _BLKCON0)
+0xF015			R/W		? (maybe _BLKCON1)
+0xF016	0xF01F			?
+0xF020			R/W		TM0D
+0xF021			R/W		TM1D
+0xF022					TM0C
+0xF023			R/W		TM1C
+0xF024					TM0CON0
+0xF025					TM0CON1
+0xF026	0xF02F			?
+0xF030					Set display range of the screen
+0xF031			R/W 	?
+0xF032			R/W 	DSPCNT
+0xF033			(3)		Contrast. 0-3: normal contrast, 4-7: decreasing contrast with 7 lightest, 4 darkest (but still lighter than normal contrast = 0)
+0xF034					Unknown SFRs
+0xF035	0xF03F			?
+0xF040	0xF041			KI Keyboard
+0xF042	0xF043			Corresponding to KI, specifies the keys that can wake up the CPU from STOP mode. See Keyboard.
+0xF044	0xF045	R/W(10)	Unknown SFRs
+0xF046	0xF047	R/W(10)	KO Keyboard
+0xF047	0xF04C			Unknown SFRs
+0xF04D	0xF04F			?
+0xF050			RO?		Emulator only. Pd number.
+0xF051	0xF220			?
+0xF221	0xF223	(3?)	No observable effect (tested for 0F221).
+
+0xF800 - 0xFA00		Video RAM
+
+
+
+======= Keycodes ========
+01: STAT
+08: CLR
+09: HYP
+OA: DRG
+0B: VERIF
+0E-16: RCL->A-M
+17-1F: STO->A-M
+25: %
+28: (
+29: )
+2B: +
+2C: ,
+2D: -
+2E: .
+30-39: Numpad
+3A: :
+41-46: A-F
+4E: *
+4F: /
+54: M
+57: !
+58: X
+59: Y
+60: - (small)
+68: log
+6C: Pol
+6D: Rec
+74: *10^x
+81: econst
+82: Pi
+8B: Ans
+8C: Ran#
+B3: Rnd
+A0-A2: sin/cos/tan
+A3: ln
+B0-B2: sin^-1/cos^-1/tan^-1
+D0: x/x
+D1: x|x/x
+D2: x^
+D3: sqrt
+D4: x^-1
+D5: x^2
+D6: x^3
+D7: 3sqrt
+D8: xsqrt
+D9: e^
+DA: 10^
+DC: Abs
+E0: up
+E1: down
+E2: right
+E3: left
+E4: mode
+E5: setup
+E6: AC
+E7: OFF
+ED: =
+EE: M+
+EF: M-
+BE: Permu
+BF: The funny little C
+F1: <shift+h/m/s>
+F6: h/m/s
+F8: ENG
+F9: <-
+FA: S<=>D
+FB: a|b/c <=> d/c
+FE: DEL
+
+
+======= Arrays/pointers =======
+0038: 
+0414: 
+04D2: 
+06A6: All math symbols
+0BEA: Pointers to ? math symbols
+0D96: (functions)
+0E10: (functions)
+1032: (submode functions)
+1040: (functions)
+104E: (functions)
+1144: 
+126E: Prompt handlers
+19DA: Logo image
+1B3C: 
+1C3C: 
+1D68: 
+1E72: Setup menu options
+1EB8: 
+1F28: 
+22E2: (function pointers)
+
+Menu attribute array:
+1F40: Text ptr
+1F43: 
+1F44 - 1F4B: 
+1F4C: Menu on up arrow
+1F4D: Menu on down arrow
+1F4E: Menu on left arrow
+1F4F: Exit key
+
+Font bitmaps:
+8:	param_1 < 0x40:	21BEh (0x30)
+	param_1 >= 0x40:	1DA6h
+
+7:	param_1 < 0x20:	210Eh
+	param_1 >= 0x20:	0162h (z at 0xDE)
+
+6:	1BBEh
+
+======= Other info ========
+
+Error types:
+1: AC Break
+2: Syntax error
+3: Math error
+4: Insufficient mem
+5: Can't simplify
+6: <spaces>
+7: Stack error
+8: Argument error
+9: Dimension error
+10: Can't solve
+11: Time out
+12: Variable error
+13: NULL error
