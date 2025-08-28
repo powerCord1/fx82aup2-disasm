@@ -2120,7 +2120,7 @@ void shutdown() { // 36FCh
     sleep(0x8813);
     SFR_F031h = 3;
     SFR_F00Ah = 0;
-    SFR_F010h = 0; // int, ea+
+    SFR_IE0 = 0; // int, ea+
     reset_wakekeys();
     reset_ko();
     halt_cpu();
@@ -2179,8 +2179,8 @@ undefined fun_37E2h() { // 37E2h
 }
 void InitSystem() { // 37EEh
     SFR_F00Ah = 1;
-    for (int i = 0x34; i != 0; i--) {} // r0
-    for (int i = 0xF401; i != 0; i--) {} // er0
+    for (int i = 52; i != 0; i--) {} // r0
+    for (int i = 500; i != 0; i--) {} // er0
     SFR_F220h = 0;
     SFR_F221h = 5;
     SFR_F222h = 6;
@@ -2199,7 +2199,7 @@ void ResetPd() { // 383Ch; sets pd to 7
     SFR_emu_pd = val;
 } // rt
 void fun_384Ch() { // 384Ch
-    SFR_F010h = 0x22;
+    SFR_IE0 = 0x22; // XI1INT, TM0INT
     SFR_F018h = 3;
 } // rt
 bool unusedfun_385Ch() {
@@ -16890,8 +16890,8 @@ char promptfun_6_ShowConstantInputScreen() { // CABEh; p/p er4;
 void undefinedfun_F822h() {
     SFR_BIASCON = 3;
     SFR_F00Ah = 0;
-    SFR_F010h = 0;
-    SFR_F011h = 0;
+    SFR_IE0 = 0;
+    SFR_IE1 = 0;
     SFR_wake_keys = 0;
     SFR_STPACP = 0x50;
     SFR_STPACP = 0xA0;

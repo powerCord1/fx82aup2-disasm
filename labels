@@ -240,20 +240,20 @@ From	To		R/W		Description
 0xF800 - 0xFA00		Video RAM
 
 Interrupt table:
-Symbol			? Addr	Bit			? Addr	Index
-WDTINT			f014	0			0000	8
-XI0INT			f014	1			f010	a
-XI1INT			f014	2			f010	c
-XI2INT			f014	3			f010	e
-XI3INT			f014	4			f010	10
-TM0INT			f014	5			f010	12
-L256SINT		f014	6			f010	14
-L1024SINT		f014	7			f010	16
-L4096SINT		f015	0			f011	18
-L16384SINT		f015	1			f011	1a
-SIO0INT			f015	2			f011	1c
-I2C0INT			f015	3			f011	1e
-I2C1INT			f015	4			f011	20
+Symbol			IRQ		Bit			IE		Index	Description
+WDTINT			f014	0			0000	8		Watchdog timer interrupt
+XI0INT			f014	1			f010	a		External input 0 interrupt (?)
+XI1INT			f014	2			f010	c		External input 1 interrupt (?)
+XI2INT			f014	3			f010	e		External input 2 interrupt (?)
+XI3INT			f014	4			f010	10		External input 3 interrupt (?)
+TM0INT			f014	5			f010	12		Timer 0 interrupt
+L256SINT		f014	6			f010	14		256 Hz interrupt (?)
+L1024SINT		f014	7			f010	16		1024 Hz interrupt (?)
+L4096SINT		f015	0			f011	18		4096 Hz interrupt (?)
+L16384SINT		f015	1			f011	1a		16384 Hz Interrupt (?)
+SIO0INT			f015	2			f011	1c		Synchronous serial port 0 interrupt
+I2C0INT			f015	3			f011	1e		I2C bus 0 interrupt
+I2C1INT			f015	4			f011	20		I2C bus 1 interrupt
 
 
 ======= Keycodes ========
