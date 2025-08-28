@@ -1264,7 +1264,7 @@ undefined fun_2E84h() { // 2E84h
     00002EEE 9031           st        r0, [ea]
     00002EF0 CEDE           bal       -22h
 }
-undefined RenderText() { // 2EF2h
+undefined render() { // 2EF2h
     er0 = 0xD087;
     00002EFA F05E           push      er0
     er2 = 0x00F8;
@@ -1623,7 +1623,7 @@ undefined fun_3298h() { // 3298h
     ClearFormulaInput();
     fun_C1C4h();
     fun_8F7Ah();
-    RenderText();
+    render();
 } // pop pc
 undefined fun_32FCh() { // 32FCh
     000032FC 8100           mov       r1 r0
@@ -2116,7 +2116,7 @@ void shutdown() { // 36FCh
     }
     ClearScreen();
     memcpy(0xD087 + 0x7800, 0xDA19, 0x9C00);
-    RenderText();
+    render();
     sleep(0x8813);
     SFR_F031h = 3;
     SFR_F00Ah = 0;
@@ -2131,21 +2131,22 @@ void sleep(int time) {    // 374Eh; p1 = er0 -> er2
     TM0C = 0x0000;  // F022h
     TM0D = time;    // F020h; 0x9A12
     T0RUN = 1;      // F025h
-    BLKCON0 = 0x0000;   // F014h
+    SFR_F014h = 0;   // F014h
+    SFR_F015h = 0;   // F015h
     halt_cpu();
 }
 void halt_cpu() { // 377Eh
-    DAT_STPACP = 0x50;
-    DAT_STPACP = 0xA0;
-    DAT_SBYCON = 0x02;
-    (void)();   // 00378E
-    (void)();
+    SFR_STPACP = 0x50;
+    SFR_STPACP = 0xA0;
+    SFR_SBYCON = 0x02;
+    nop;   // 00378E
+    nop;
 } // rt
 void unusedfun_3794h() {
     SFR_F014h &= 0xFD;
-    DAT_STPACP = 0x50;
-    DAT_STPACP = 0xA0;
-    DAT_SBYCON = 0x02;
+    SFR_STPACP = 0x50;
+    SFR_STPACP = 0xA0;
+    SFR_SBYCON = 0x02;
     nop; // 000037AE
     nop;
 } // rt
@@ -2176,7 +2177,7 @@ undefined fun_37E2h() { // 37E2h
     000037E8 CEF0           bal       -10h
     return false;
 }
-void fun_37EEh() { // 37EEh
+void InitSystem() { // 37EEh
     SFR_F00Ah = 1;
     for (int i = 0x34; i != 0; i--) {} // r0
     for (int i = 0xF401; i != 0; i--) {} // er0
@@ -2280,7 +2281,7 @@ undefined fun_3948h() { // 3948h
     DAT_8E00h = 4;
     sleep(0x9A12);
 } // ppc; p/p er4
-undefined fun_3960h(int param_0) { // 3960h; p1 = er0
+undefined fun_3960h(int param_1) { // 3960h; p1 = er0
     DAT_8E00h = 0;
     sleep(param_1);
 } // ppc; p/p er4
@@ -10631,7 +10632,7 @@ void main() { // 8C92h
     push(0x2003);
     memset(0x188A, 0x5A00);
     sp += 0x2;
-    fun_37EEh();
+    InitSystem();
     sleep(0xB803);
     DAT_cursor_noflash = 0;
     if (IsRamCorrupted() != 0) {
@@ -10716,7 +10717,7 @@ void main() { // 8C92h
                 fun_8EEAh(); // b
             }
             if (r4 > 0) {
-                RenderText();
+                render();
             } else {
                 r5 = 0;
             }
@@ -10769,7 +10770,7 @@ void main() { // 8C92h
                 }
             }
         }
-        RenderText(); // 008E94
+        render(); // 008E94
     }
 }
 undefined fun_8E9Ch() { // 8E9Ch
@@ -11593,11 +11594,11 @@ void diag_TestSelectionMenu() {    // 969Eh
     fun_35B0h(0x0E86, 4);
     ClearScreen();
     DAT_font_size = 7;
-    PrintStr(1, 0x761A);
-    PrintStr(8, 0x081F);
-    PrintStr(15, 0x5401);
-    PrintStr(16, 0x9E12);
-    RenderText();
+    PrintStr(0, 1, 0x761A);
+    PrintStr(0, 8, 0x081F);
+    PrintStr(0, 15, 0x5401);
+    PrintStr(0, 16, 0x9E12);
+    render();
     00009706 CE23           bal       +23h // -> 00974E
     while (r0 == 0) {
         r0 = WaitForKeypress(true);
@@ -11653,7 +11654,7 @@ void diag_TestSelectionMenu() {    // 969Eh
     DAT_font_size = 7;
     PrintStr(0, 1, 0xCA04); // test ok
     PrintStr(0, 22, 0x8018);
-    RenderText();
+    render();
     000097CC CE10           bal       +10h // -> 0097EE
     fun_96C8h();
     ContrastScreen(1);
@@ -22289,7 +22290,7 @@ void fun_128B0h(int param_1) { // 128B0h; p1 = er0 -> er4
     DAT_use_screen_buffer = 1;
     ResetDispMode();
     fun_3948h();
-    fun_3960h(0x34, 0x25);
+    fun_3960h(0x3425);
     ResetStatusBar();
 } // ppc; p/p qr0
 000128F2 FE1F           rt        
@@ -26154,7 +26155,7 @@ undefined EnterDiagnosticMode() {   // 14A2Ch
     DAT_int_813Ah = r0;
     fun_14AD0h();
     _PrintStr_FontSize7_2Args(0x16, 0xA817);
-    RenderText();
+    render();
     fun_3E7Eh();
     if (r0 < 4) {
         if (r0 != 0) {
@@ -26228,7 +26229,7 @@ undefined diag_StartAllTests() { // 14B4A
     _PrintStr_FontSize7_2Args(1, 0xB117);
     _PrintStr_FontSize7_2Args(15, 0xB917);
     _PrintStr_FontSize7_2Args(0x16, 0xA817);
-    RenderText();
+    render();
     fun_69F2h(er14);
     
     push(DAT_contrast_setting);
@@ -26283,7 +26284,7 @@ undefined diag_Keytest(int param_1) { // 14BFEh; p1 = er0
     00014C34 0001           mov       r0 #1h
     00014C36 F2E5           mov       er2 er14
     _PrintStr_FontSize7_2Args();
-    RenderText();
+    render();
     00014C40 F0E5           mov       er0 er14
     fun_69F2h();
     00014C46 90E0           l         r0, [er14]
@@ -26384,8 +26385,8 @@ undefined diag_SwTest() {   // 14D24h
     concat(r10, DAT_soft_rev);
     00014D56 EC00           mov       er12, #0h
     fun_14E7Ah();
-    PrintStr(1, sp); // 2BC0
-    RenderText();
+    PrintStr(1, vars[0]); // 2BC0
+    render();
     diag_CalcChecksum();
     if (er0 == DAT_checksum) {
         concat(r8, " OK");
@@ -26398,7 +26399,7 @@ undefined diag_SwTest() {   // 14D24h
     00014D8C 0B00           mov       r11 #0h
     r0 = "SUM ";
     fun_14E7Ah();
-    PrintStr(8, sp); // 2BC0
+    PrintStr(8, vars[0]); // 2BC0
     fun_14E8Ah();
     00014DA6 7001           cmp       r0 #1h
     00014DA8 C907           beq       +7h
@@ -26420,7 +26421,7 @@ undefined diag_SwTest() {   // 14D24h
     00014DCA 0144           mov       r1 #44h
     00014DCC 0400           mov       r4 #0h
     fun_14E7Ah();
-    PrintStr(0x48, 8, sp);
+    PrintStr(0x48, 8, vars[0]);
     GetPdValue_Emu();
     00014DE0 022D           mov       r2 #2Dh
     00014DE2 8000           mov       r0 r0
@@ -26431,8 +26432,8 @@ undefined diag_SwTest() {   // 14D24h
     00014DEC 0164           mov       r1 #64h
     00014DEE 0300           mov       r3 #0h
     fun_14E7Ah();
-    PrintStr(0xF, sp); // 2BC0
-    RenderText();    // write to screen
+    PrintStr(0xF, vars[0]); // 2BC0
+    render();    // write to screen
     if (*er14 != 0 || diag_RegisterReadTest() == 0xA5) {
         concat(r4, " OK");
     } else {
@@ -26442,7 +26443,7 @@ undefined diag_SwTest() {   // 14D24h
     00014E20 0700           mov       r7 #0h
     xr0 = "READ";
     fun_14E7Ah();
-    PrintStr(0x18, 0xF, sp);
+    PrintStr(0x18, 0xF, vars[0]);
     _PrintStr_FontSize7_2Args(0x16, s_Press_AC);
     00014E42 90E2           l         er0 [ea14]
     00014E44 7100           cmp       r1 #0h
@@ -26454,7 +26455,7 @@ undefined diag_SwTest() {   // 14D24h
     00014E56 9051           st        r0, [ea+]
     00014E58 9051           st        r0, [ea+]
     00014E5A 9131           st        r1, [ea]
-    RenderText();
+    render();
     fun_391Ah();
     00014E64 C9FB           beq       -5h
     ResetPd();
@@ -26616,7 +26617,7 @@ undefined fun_14FDAh() { // 14FDAh
 00014FEA 8010           mov       r0 r1
 00014FEC FE1F           rt        
 void fun_14FEEh() {
-    RenderText();
+    render();
     fun_7112h();
 } // ppc
 void fun_14FFAh() { // 14FFAh
@@ -35782,16 +35783,22 @@ fun_16614h();
 0001A8F0 0000           mov       r0 #0h
 0001A8F2 CEFB           bal       -5h
 undefined fun_1A8F4h() { // 1A8F4h
-0001A8F4 F65E           push      er6
-0001A8F6 F87E           push      qr8
-0001A8F8 F02B 000A      lea       000Ah[er2]
-0001A8FC 9652           l         er6 [ea+]
-0001A8FE 9856           l         qr8, [ea+]
-0001A900 F00B 000A      lea       000Ah[er0]
-0001A904 9653           st        er6 [ea+]
-0001A906 9857           st        qr8, [ea+]
-0001A908 CE02           bal       +2h
+    0001A8F4 F65E           push      er6
+    0001A8F6 F87E           push      qr8
+    0001A8F8 F02B 000A      lea       000Ah[er2]
+    0001A8FC 9652           l         er6 [ea+]
+    0001A8FE 9856           l         qr8, [ea+]
+    0001A900 F00B 000A      lea       000Ah[er0]
+    0001A904 9653           st        er6 [ea+]
+    0001A906 9857           st        qr8, [ea+]
+    fun_1A90Eh();
+}
 undefined fun_1A90Ah(int *param_1, int *param_2) { // 1A90Ah; p1 = er0, p2 = er2
+    0001A90A F65E           push      er6
+    0001A90C F87E           push      qr8
+    fun_1A90Eh();
+}
+void fun_1A90Eh() {
     0001A90E F02A           lea       [param_2]
     0001A910 9652           l         er6 [ea+]
     0001A912 9856           l         qr8, [ea+]
@@ -35808,238 +35815,22 @@ undefined fun_1A936h(long param_1) { // 1A936h; p1 = xr0
     DAT_arg0_ref = param_1;
     _CopyReg0ToArg0RefPtr(pi());
 } // ppc
-undefined fun_1A950h() { // 1A950h
-0001A950 F8CE           push      lr
-0001A952 F00C 805C      lea       805Ch
-0001A956 9055           st        xr0, [ea+]
-0001A958 F46E           push      xr4
-0001A95A F87E           push      qr8
-fun_192F2h();
-fun_16C10h();
-fun_16E36h();
-0001A968 CEF0           bal       -10h
-0001A96A 9200           l         r2, [er0]
-0001A96C 220F           and       r2 #Fh
-0001A96E 720A           cmp       r2 #Ah
-0001A970 C006           bge       +6h
-0001A972 9208 0009      l         r2, 0009h[er0]
-0001A976 22F0           and       r2 #F0h
-0001A978 C802           bne       +2h
-0001A97A 0000           mov       r0 #0h
-0001A97C FE1F           rt        
-0001A97E 0001           mov       r0 #1h
-0001A980 FE1F           rt        
-0001A982 62E8           addc      r2 #E8h
-0001A984 63A2           addc      r3 #A2h
-0001A986 62D8           addc      r2 #D8h
-0001A988 6308           addc      r3 #8h
-0001A98A 6318           addc      r3 #18h
-0001A98C 62F8           addc      r2 #F8h
-0001A98E 0490           mov       r4 #90h
-0001A990 0770           mov       r7 #70h
-0001A992 0910           mov       r9 #10h
-0001A994 0119           mov       r1 #19h
-0001A996 0121           mov       r1 #21h
-0001A998 0133           mov       r1 #33h
-0001A99A 0143           mov       r1 #43h
-0001A99C 0161           mov       r1 #61h
-0001A99E 0169           mov       r1 #69h
-0001A9A0 0187           mov       r1 #87h
-0001A9A2 0203           mov       r2 #3h
-0001A9A4 0209           mov       r2 #9h
-0001A9A6 0217           mov       r2 #17h
-0001A9A8 0221           mov       r2 #21h
-0001A9AA 0247           mov       r2 #47h
-0001A9AC 0253           mov       r2 #53h
-0001A9AE 0259           mov       r2 #59h
-0001A9B0 0287           mov       r2 #87h
-0001A9B2 0289           mov       r2 #89h
-0001A9B4 0299           mov       r2 #99h
-0001A9B6 0301           mov       r3 #1h
-0001A9B8 0319           mov       r3 #19h
-0001A9BA 0323           mov       r3 #23h
-0001A9BC 0329           mov       r3 #29h
-0001A9BE 0341           mov       r3 #41h
-0001A9C0 0343           mov       r3 #43h
-0001A9C2 0361           mov       r3 #61h
-0001A9C4 0371           mov       r3 #71h
-0001A9C6 0377           mov       r3 #77h
-0001A9C8 0391           mov       r3 #91h
-0001A9CA 0403           mov       r4 #3h
-0001A9CC 0407           mov       r4 #7h
-0001A9CE 0413           mov       r4 #13h
-0001A9D0 0427           mov       r4 #27h
-0001A9D2 0437           mov       r4 #37h
-0001A9D4 0451           mov       r4 #51h
-0001A9D6 0469           mov       r4 #69h
-0001A9D8 0473           mov       r4 #73h
-0001A9DA 0481           mov       r4 #81h
-0001A9DC 0493           mov       r4 #93h
-0001A9DE 0497           mov       r4 #97h
-0001A9E0 0511           mov       r5 #11h
-0001A9E2 0517           mov       r5 #17h
-0001A9E4 0527           mov       r5 #27h
-0001A9E6 0529           mov       r5 #29h
-0001A9E8 0533           mov       r5 #33h
-0001A9EA 0539           mov       r5 #39h
-0001A9EC 0551           mov       r5 #51h
-0001A9EE 0553           mov       r5 #53h
-0001A9F0 0559           mov       r5 #59h
-0001A9F2 0581           mov       r5 #81h
-0001A9F4 0583           mov       r5 #83h
-0001A9F6 0589           mov       r5 #89h
-0001A9F8 0611           mov       r6 #11h
-0001A9FA 0623           mov       r6 #23h
-0001A9FC 0629           mov       r6 #29h
-0001A9FE 0637           mov       r6 #37h
-0001AA00 0649           mov       r6 #49h
-0001AA02 0667           mov       r6 #67h
-0001AA04 0671           mov       r6 #71h
-0001AA06 0679           mov       r6 #79h
-0001AA08 0689           mov       r6 #89h
-0001AA0A 0697           mov       r6 #97h
-0001AA0C 0703           mov       r7 #3h
-0001AA0E 0707           mov       r7 #7h
-0001AA10 0713           mov       r7 #13h
-0001AA12 0721           mov       r7 #21h
-0001AA14 0731           mov       r7 #31h
-0001AA16 0737           mov       r7 #37h
-0001AA18 0749           mov       r7 #49h
-0001AA1A 0763           mov       r7 #63h
-0001AA1C 0767           mov       r7 #67h
-0001AA1E 0779           mov       r7 #79h
-0001AA20 0781           mov       r7 #81h
-0001AA22 0791           mov       r7 #91h
-0001AA24 0793           mov       r7 #93h
-0001AA26 0799           mov       r7 #99h
-0001AA28 0803           mov       r8 #3h
-0001AA2A 0817           mov       r8 #17h
-0001AA2C 0833           mov       r8 #33h
-0001AA2E 0841           mov       r8 #41h
-0001AA30 0847           mov       r8 #47h
-0001AA32 0851           mov       r8 #51h
-0001AA34 0869           mov       r8 #69h
-0001AA36 0871           mov       r8 #71h
-0001AA38 0889           mov       r8 #89h
-0001AA3A 0893           mov       r8 #93h
-0001AA3C 0899           mov       r8 #99h
-0001AA3E 0901           mov       r9 #1h
-0001AA40 0913           mov       r9 #13h
-0001AA42 0917           mov       r9 #17h
-0001AA44 0923           mov       r9 #23h
-0001AA46 0931           mov       r9 #31h
-0001AA48 0943           mov       r9 #43h
-0001AA4A 0949           mov       r9 #49h
-0001AA4C 0959           mov       r9 #59h
-0001AA4E 0961           mov       r9 #61h
-0001AA50 0973           mov       r9 #73h
-0001AA52 0979           mov       r9 #79h
-0001AA54 0989           mov       r9 #89h
-0001AA56 1234           add       r2 #34h
-0001AA58 123C           add       r2 #3Ch
-0001AA5A 1244           add       r2 #44h
-0001AA5C 124A           add       r2 #4Ah
-0001AA5E 1250           add       r2 #50h
-0001AA60 1262           add       r2 #62h
-0001AA62 80DC           srl       r0 r13
-0001AA64 AA56           mov       r10, cr5
-0001AA66 8DF2           and       r13 r15
-0001AA68 000E           mov       r0 #Eh
-0001AA6A 0001           mov       r0 #1h
-0001AA6C FFFF           brk       
+void fun_1A950h(long param_1) { // 1A950h; p1 = xr0
+    DAT_arg0_ref = param_1;
+    0001A958 F46E           push      xr4
+    0001A95A F87E           push      qr8
+    fun_192F2h();
+    fun_16C10h();
+    fun_16E36h();
+}; ppc; p/p xr4, qr8
+bool undefinedfun_1A96Ah(int *param_1) { // 1A96Ah; p1 = er0
+    if (*param_1 & 0xF >= 0xA) {
+        return true;
+    }
+    if (*param_1[9] & 0xF0 != 0xF0) {
+        return true;
+    }
+    return false;
+} // rt
 
-0001FF40 69FE           addc      r9 #FEh
-0001FF42 F89B           dw        F89Bh
-0001FF44 3182           or        r1 #82h
-0001FF46 0812           mov       r8 #12h
-0001FF48 D9BA           st        r9, -6h[bp]
-0001FF4A E862           mov       er8, #-1Eh
-0001FF4C 3ABA           or        r10 #BAh
-0001FF4E E80A           mov       er8, #Ah
-0001FF50 90BA           dw        90BAh
-0001FF52 E8E2           add       er8, #-1Eh
-0001FF54 C682           bgts      -7Eh
-0001FF56 08DA           mov       r8 #DAh
-0001FF58 AAFE           mov       cr10, r15
-0001FF5A F8AB 4100      lea       4100h[er10]
-0001FF5E 0088           mov       r0 #88h
-0001FF60 B34A           dw        B34Ah
-0001FF62 A09D           dw        A09Dh
-0001FF64 F3C5           dw        F3C5h
-0001FF66 18F1           add       r8 #F1h
-0001FF68 EBDA           dw        EBDAh
-0001FF6A A8B5           dw        A8B5h
-0001FF6C B438           l         er4, -8h[bp]
-0001FF6E D85C           l         r8, 1Ch[fp]
-0001FF70 A71E           mov       cr7, r1
-0001FF72 48C9           xor       r8 #C9h
-0001FF74 D345           l         r3, 5h[fp]
-0001FF76 A822           rb        r8.2
-0001FF78 B5CA           dw        B5CAh
-0001FF7A 98CE           dw        98CEh
-0001FF7C 9135           dw        9135h
-0001FF7E 406B           xor       r0 #6Bh
-0001FF80 2D36           and       r13 #36h
-0001FF82 9830           l         r8, [ea]
-0001FF84 F4E4           mul       er4, r14
-0001FF86 E89C           add       er8, #1Ch
-0001FF88 542E           cmpc      r4 #2Eh
-0001FF8A 6888           addc      r8 #88h
-0001FF8C 6A09           addc      r10 #9h
-0001FF8E C860           bne       +60h
-0001FF90 09D6           mov       r9 #D6h
-0001FF92 D05F           l         r0, 1Fh[fp]
-0001FF94 EB00           dw        EB00h
-0001FF96 A8F8           dw        A8F8h
-0001FF98 49FE           xor       r9 #FEh
-0001FF9A 883A           sll       r8 r3
-0001FF9C 5082           cmpc      r0 #82h
-0001FF9E C898           bne       -68h
-0001FFA0 86BA           sll       r6 r11
-0001FFA2 889F           dw        889Fh
-0001FFA4 72BA           cmp       r2 #BAh
-0001FFA6 1021           add       r0 #21h
-0001FFA8 1BBA           add       r11 #BAh
-0001FFAA 785C           cmp       r8 #5Ch
-0001FFAC B982           dw        B982h
-0001FFAE 58E1           cmpc      r8 #E1h
-0001FFB0 3EFE           or        r14 #FEh
-0001FFB2 D0C2           st        r0, 2h[fp]
-0001FFB4 0000           mov       r0 #0h
-0001FFB6 0000           mov       r0 #0h
-0001FFB8 0000           mov       r0 #0h
-0001FFBA 0000           mov       r0 #0h
-0001FFBC 0000           mov       r0 #0h
-0001FFBE 0000           mov       r0 #0h
-0001FFC0 0000           mov       r0 #0h
-0001FFC2 0000           mov       r0 #0h
-0001FFC4 0000           mov       r0 #0h
-0001FFC6 0000           mov       r0 #0h
-0001FFC8 0000           mov       r0 #0h
-0001FFCA 0000           mov       r0 #0h
-0001FFCC 0000           mov       r0 #0h
-0001FFCE 0000           mov       r0 #0h
-0001FFD0 0004           mov       r0 #4h
-0001FFD2 0401           mov       r4 #1h
-0001FFD4 0001           mov       r0 #1h
-0001FFD6 0001           mov       r0 #1h
-0001FFD8 0000           mov       r0 #0h
-0001FFDA 0001           mov       r0 #1h
-0001FFDC 0000           mov       r0 #0h
-0001FFDE 0000           mov       r0 #0h
-0001FFE0 0101           mov       r1 #1h
-0001FFE2 0001           mov       r0 #1h
-0001FFE4 0504           mov       r5 #4h
-0001FFE6 0706           mov       r7 #6h
-0001FFE8 0908           mov       r9 #8h
-0001FFEA 0B0A           mov       r11 #Ah
-0001FFEC 0D0C           mov       r13 #Ch
-0001FFEE 0F0E           mov       r15 #Eh
-0001FFF0 0000           mov       r0 #0h
-0001FFF2 0000           mov       r0 #0h
-0001FFF4 5943           cmpc      r9 #43h
-0001FFF6 382D           or        r8 #2Dh
-0001FFF8 3336           or        r3 #36h
-0001FFFA 2041           and       r0 #41h
-0001FFFC 0625           mov       r6 #25h
-0001FFFE 0000           mov       r0 #0h
+0001AA6C FFFF           brk

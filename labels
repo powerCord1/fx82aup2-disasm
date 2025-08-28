@@ -211,7 +211,7 @@ From	To		R/W		Description
 0xF009			W		SBYCON
 0xF00A					Unknown SFRs
 0xF00B	0xF013			?
-0xF014			R/W		? (maybe _BLKCON0)
+0xF014			R/W		? (bit 5 gets set to 1 when waking from sleep)
 0xF015			R/W		? (maybe _BLKCON1)
 0xF016	0xF01F			?
 0xF020			R/W		TM0D
@@ -239,6 +239,21 @@ From	To		R/W		Description
 
 0xF800 - 0xFA00		Video RAM
 
+Interrupt table:
+Symbol			? Addr	Bit			? Addr	Index
+WDTINT			f014	0			0000	8
+XI0INT			f014	1			f010	a
+XI1INT			f014	2			f010	c
+XI2INT			f014	3			f010	e
+XI3INT			f014	4			f010	10
+TM0INT			f014	5			f010	12
+L256SINT		f014	6			f010	14
+L1024SINT		f014	7			f010	16
+L4096SINT		f015	0			f011	18
+L16384SINT		f015	1			f011	1a
+SIO0INT			f015	2			f011	1c
+I2C0INT			f015	3			f011	1e
+I2C1INT			f015	4			f011	20
 
 
 ======= Keycodes ========
@@ -351,6 +366,13 @@ Font bitmaps:
 	param_1 >= 0x20:	0162h (z at 0xDE)
 
 6:	1BBEh
+
+Init data:
+1AA66 (2): destination offset address
+1AA68 (2): size of objects
+1AA6A (1): source phy_seg address
+1AA6B (1): destination phy_seg address
+
 
 ======= Other info ========
 
