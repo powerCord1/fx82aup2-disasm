@@ -31,8 +31,7 @@ undefined fun_2408h() { // 2408h
     00002442 C202           bgt       +2h
     00002444 8010           mov       r0 r1
     00002446 10F8           add       r0 #F8h
-    return
-}
+} // rt
 undefined fun_244Ah() { // 244Ah
     if (er0) {
         fun_v8FCEh();
@@ -40,27 +39,22 @@ undefined fun_244Ah() { // 244Ah
     }
 }
 
-undefined strcpy(int *dest, char *src) {   // 2454h; er0, er2
+void strcpy(int *dest, char *src) {   // 2454h; er0, er2
     if (er0 != 0 && er2 != 0) {
         strcat(dest, src);    // 5812h
     } else {
         *er0 = r2;
-        return;
     }
-}
+} // ppc
 
-undefined fun_2468h() { // 2468h
-    00002468 F8CE           push      lr
+undefined fun_2468h(int param_1) { // 2468h; p1 = er0
     0000246A F005           mov       er0 er0
     0000246C C9FA           beq       -6h
     0000246E F225           mov       er2 er2
     00002470 C9F9           beq       -7h
     fun_B914h();
-} // pop pc
+} // ppc
 undefined fun_2478h() { // 2478h
-    00002478 F8CE           push      lr
-    0000247A FC6E           push      xr12
-    0000247C F46E           push      xr4
     0000247E FC05           mov       er12 er0
     00002480 FE25           mov       er14 er2
     00002482 9100           l         r1, [er0]
@@ -117,10 +111,7 @@ undefined fun_2478h() { // 2478h
     000024E8 740F           cmp       r4 #Fh
     000024EA C1F1           blt       -Fh
     000024EC 0001           mov       r0 #1h
-    000024EE F42E           pop       xr4
-    000024F0 FC2E           pop       xr12
-    000024F2 F28E           pop       pc
-}
+} // ppc; p/p xr12, xr4
 undefined fun_24F4h() { // 24F4h
 000024F4 F8CE           push      lr
 000024F6 F87E           push      qr8
@@ -489,14 +480,12 @@ undefined fun_27E4h(int param_1, int param_2) { // 27E4h; p1 = er0, p2 = er2
     PrintStr(r0, r1, param_2);
 } // ppc
 undefined GetBasenModeStr() {   // 280Ah
-    r0 = DAT_submode;
-    r0 >>= 2;
-    r1 = 0;
+    r0 = (int)(DAT_submode >> 2);
     r1 <<= 2; // sllc
     r0 <<= 2;
     er2 = 0x2828 + er0;
-    PrintStr(0x4E, 0xC, er2);
-} // pop pc
+    PrintStr(0x4E, 12, er2);
+} // ppc
 00002828 6942           addc      r9 #42h
 0000282A 006E           mov       r0 #6Eh
 0000282C 634F           addc      r3 #4Fh
@@ -506,32 +495,32 @@ undefined GetBasenModeStr() {   // 280Ah
 00002834 6548           addc      r5 #48h
 00002836 0078           mov       r0 #78h
 undefined fun_2838h() { // 2838h
-00002838 F00A           lea       [er0]
-0000283A 9350           l         r3, [ea+]
-0000283C 7331           cmp       r3 #31h
-0000283E C804           bne       +4h
-00002840 9350           l         r3, [ea+]
-00002842 C80E           bne       +Eh
-00002844 9201           st        r2, [er0]
-00002846 FE1F           rt        
-00002848 7360           cmp       r3 #60h
-0000284A C808           bne       +8h
-0000284C 9350           l         r3, [ea+]
-0000284E 7331           cmp       r3 #31h
-00002850 C805           bne       +5h
-00002852 9350           l         r3, [ea+]
-00002854 C805           bne       +5h
-00002856 9209 0001      st        r2, 0001h[er0]
-0000285A FE1F           rt        
-0000285C 7300           cmp       r3 #0h
-0000285E C902           beq       +2h
-00002860 9350           l         r3, [ea+]
-00002862 C8F2           bne       -Eh
-00002864 9331           st        r3, [ea]
-00002866 F1CE           push      ea
-00002868 F01E           pop       er0
-0000286A 9209 FFFF      st        r2, FFFFh[er0]
-0000286E FE1F           rt        
+    00002838 F00A           lea       [er0]
+    0000283A 9350           l         r3, [ea+]
+    0000283C 7331           cmp       r3 #31h
+    0000283E C804           bne       +4h
+    00002840 9350           l         r3, [ea+]
+    00002842 C80E           bne       +Eh
+    00002844 9201           st        r2, [er0]
+    00002846 FE1F           rt        
+    00002848 7360           cmp       r3 #60h
+    0000284A C808           bne       +8h
+    0000284C 9350           l         r3, [ea+]
+    0000284E 7331           cmp       r3 #31h
+    00002850 C805           bne       +5h
+    00002852 9350           l         r3, [ea+]
+    00002854 C805           bne       +5h
+    00002856 9209 0001      st        r2, 0001h[er0]
+    0000285A FE1F           rt        
+    0000285C 7300           cmp       r3 #0h
+    0000285E C902           beq       +2h
+    00002860 9350           l         r3, [ea+]
+    00002862 C8F2           bne       -Eh
+    00002864 9331           st        r3, [ea]
+    00002866 F1CE           push      ea
+    00002868 F01E           pop       er0
+    0000286A 9209 FFFF      st        r2, FFFFh[er0]
+} // rt
 undefined fun_2870h(char param_1, int *param_2) { // 2870h; p1 = r1 -> r0 (rewritten early), p2 = er2 -> ea
     ea = er2;
     if (param_1 != 0) {
@@ -639,7 +628,7 @@ undefined fun_293Ch() { // 293Ch
     000029A6 F82E           pop       xr8
     000029A8 A1EA           mov       sp, er14
     000029AA FE1E           pop       er14
-} // pop pc
+} // ppc
 undefined fun_29AEh() { // 29AEh
     000029B0 F84E           push      r8
     000029B2 0801           mov       r8 #1h
@@ -666,7 +655,7 @@ undefined fun_29AEh() { // 29AEh
     000029E6 0800           mov       r8 #0h
     000029E8 8080           mov       r0 r8
     000029EA F80E           pop       r8
-} // pop pc
+} // ppc
 undefined fun_29EEh() { // 29EEh
     000029EE F8CE           push      lr
     000029F0 F85E           push      er8
@@ -708,7 +697,7 @@ undefined fun_2A28h() { // 2A28h
     00002A3C F026           add       er0 er2
     00002A3E F21E           pop       er2
     fun_35B0h();
-} // pop pc
+} // ppc
 undefined SetAllPixels(char param_1, char param_2) {    // 2A46h; p/p er4; p1 = r0 -> r4, p2 = r1 -> r5
     if (testbit(param_2, 0) == 1) {
         memset(DAT_screen_buffer, param_1, 0);
@@ -756,7 +745,7 @@ undefined fun_2A9Ah() { // 2A9Ah
     fun_35B0h();
     00002AD4 F42E           pop       xr4
     00002AD6 F28E           
-} // pop pc
+} // ppc
 undefined fun_2AD8h() { // 2AD8h
     00002ADC F805           mov       er8 er0
     00002ADE FA25           mov       er10 er2
@@ -1384,7 +1373,7 @@ undefined fun_2F58h() { // 2F58h
     }
     er0 = 12;
     memcpy(0x00F8, 0xF087);
-} // pop pc
+} // ppc
 undefined fun_306Ah() { // 306Ah
     00003058 F05E           push      er0
 0000306A F8CE           push      lr
@@ -1475,7 +1464,7 @@ undefined fun_30B6h() { // 30B6h
     00003126 9011 8120      st        r0, DAT_draw_mode
     0000312A A1EA           mov       sp, er14
     0000312C FC2E           pop       xr12
-} // pop pc
+} // ppc
 undefined fun_3130h() { // 3130h
     00003132 F87E           push      qr8
     00003134 E1FA           add       sp, #FAh
@@ -1502,7 +1491,7 @@ undefined fun_3130h() { // 3130h
     0000316A C8EE           bne       -12h
     0000316C E106           add       sp, #6h
     0000316E F83E           pop       qr8
-} // pop pc
+} // ppc
 undefined fun_3172h() { // 3172h
 00003172 F44E           push      r4
 00003174 F02A           lea       [er2]
@@ -1603,7 +1592,7 @@ void CreateErrorDialog(char errorType) { // 326Ah; p1 = er0
     er2 += (int)errorType) * 2;	// Increment by offset (er0
     CreateInputScreen(*er2, s_empty_line, 0x241E, s_AC_Cancel);    // p1 = index pointer
     sp += 4;
-} // pop pc
+} // ppc
 undefined fun_3298h() { // 3298h
     er0 = 1;
     0000329C 9011 80FC      st        r0, DAT_80FCh
@@ -1624,7 +1613,7 @@ undefined fun_3298h() { // 3298h
     fun_C1C4h();
     fun_8F7Ah();
     render();
-} // pop pc
+} // ppc
 undefined fun_32FCh() { // 32FCh
     000032FC 8100           mov       r1 r0
     000032FE C909           beq       +9h
@@ -2030,7 +2019,7 @@ undefined fun_35F6h() { // 35F6h
     0000364E F0A5           mov       er0 er10
     fun_1502Eh();
     00003654 CEF2           bal       -Eh
-} // pop pc
+} // ppc
 undefined fun_3656h() { // 3656h
     00003658 F87E           push      qr8
     0000365A FA25           mov       er10 er2
@@ -2057,7 +2046,7 @@ undefined fun_3656h() { // 3656h
     0000368A F01E           pop       er0
     0000368C F83E           pop       qr8
     0000368E F28E           pop       pc
-} // pop pc
+} // ppc
 undefined fun_3690h() { // 3690h
 00003690 FE1F           rt        
 undefined fun_3692h() { // 3692h
@@ -2127,12 +2116,12 @@ void shutdown() { // 36FCh
     goto start_up();
 }
 void sleep(int time) {    // 374Eh; p1 = er0 -> er2
-    T0CS0 = 1; // F024h
+    SFR_F024h = 1; // F024h
     TM0C = 0x0000;  // F022h
     TM0D = time;    // F020h; 0x9A12
-    T0RUN = 1;      // F025h
-    SFR_F014h = 0;   // F014h
-    SFR_F015h = 0;   // F015h
+    SFR_F025h = 1;      // F025h
+    SFR_IRQ0 = 0;   // F014h
+    SFR_IRQ1 = 0;   // F015h
     halt_cpu();
 }
 void halt_cpu() { // 377Eh
@@ -2143,7 +2132,7 @@ void halt_cpu() { // 377Eh
     nop;
 } // rt
 void unusedfun_3794h() {
-    SFR_F014h &= 0xFD;
+    SFR_IRQ0 &= 0xFD;
     SFR_STPACP = 0x50;
     SFR_STPACP = 0xA0;
     SFR_SBYCON = 0x02;
@@ -2151,7 +2140,7 @@ void unusedfun_3794h() {
     nop;
 } // rt
 char unusedfun_37B4h() {
-    return DAT_F014h;
+    return SFR_IRQ0;
 } // rt
 undefined fun_37BCh() { // 37BCh
     000037BC A0F1 80F4      tb        80F4h.7
@@ -2192,7 +2181,7 @@ void InitSystem() { // 37EEh
     fun_3258h();
     reset_wakekeys();
     reset_ko();
-} // pop pc
+} // ppc
 void ResetPd() { // 383Ch; sets pd to 7
     char val = 0x07;
     SFR_F048h = (long)(val);
@@ -7228,7 +7217,7 @@ void fun_69F2h(int param_1) { // 69F2h; p1 = er0 -> er8
     vars[9] = fun_9E72h();
     DAT_font_size = DAT_811Bh;
     DAT_font_size = 1;
-    DAT_8121h = 0;
+    DAT_use_buffer = false;
     er2 = er14 - 8;
     fun_2F1Eh(DAT_cursor_xcor, DAT_cursor_ycor);
     er2 = vars[8];
@@ -7237,49 +7226,43 @@ void fun_69F2h(int param_1) { // 69F2h; p1 = er0 -> er8
         fun_2C02h(DAT_cursor_xcor, DAT_cursor_ycor, DAT_811Ah);
     }
     fun_A218h(er14 - 0x32, vars[8]); // _vars[8] is er2
-    DAT_use_screen_buffer = 1;
+    DAT_use_screen_buffer = true;
     DAT_font_size = 0;
     vars[6] = 1;
     vars[5] = 1;
     vars[10] = 0;
     fun_671Ch(er14 + 0xB8FF);
-    00006A88 ACE8 FFB8      l         er12 000Ch65464[ea14]
-    *er12 = 1;
+    *DAT_FFB8h[er14] = 1;
     goto LAB_6ABEh;
 
     LAB_6A92h:
     fun_877Ah(er14 - 0x32);
     sleep(0x9A12);
-    if (*ea14[0xC] | *ea14[0]) {
-        DAT_timer_byte++;	// Increment timer value
-        00006ABC B0FE           st        er0, -2h[fp]
+    if (*DAT_FFBA[er14] | *DAT_FFBC[er14]) { // 00006AA2
+        er0 = DAT_timer_byte;
+        er0++;	// Increment timer value
+        DAT_timer_byte = er0;
+        vars[2] = er0; // 00006ABC
 LAB_6ABEh:
         goto LAB_6A92h;
-    }
-    00006AC0 ACE8 FFB8      l         er12 000Ch65464[ea14]
-    *er12 = 0;
-    00006AC8 ACE8 FFBA      l         er12 000Ch65466[ea14]
-    *param_1 = *er12;
-    00006AD0 ACE8 FFBC      l         er12 000Ch65468[ea14]
-    r0 = *er12
-    00006AD6 9089 0001      st        r0, 0001h[param_1]
+    *DAT_FFB8h[er14] = 0;
+    *param_1 = *DAT_FFBAh[er14];
+    *param_1 = *DAT_FFBCh[er14];
     er2 = er14;
     er14 = 0;
     _WriteToScreen(vars[8], er2 - 0x1E);
 } // b p/p sp
 undefined fun_6AE8h() { // 6AE8h
-    00006AEA F45E           push      er4
     r4 = 0;
     fun_8068h();
     _SetDat8100h(r0 ? 0x0D : 0x00);    // r4 = arg, r0 = r4
-    00006AFE F41E           pop       er4
-}
+} // ppc; p/p er4
 void fun_6B02h(char param_1; char param_2) { // 6B02h; p1 = r0, p2 = r1
     DAT_cursor_xcor = param_1;
     DAT_cursor_ycor = param_2;
     fun_10686h();
     DAT_811Bh = DAT_font_size;
-} // pop pc
+} // ppc
 bool fun_6B1Ah() { // 6B1Ah; p/p er8
     00006B1E F805           mov       er8 er0
     00006B20 0002           mov       r0 #2h
@@ -8194,7 +8177,7 @@ LAB_0073F0:
             er0 -= 0x14;
             fun_AFE6h();
             reset();
-            // exit while statement
+            break;
         }
     }
     er12 = vars[2];
@@ -9409,7 +9392,7 @@ undefined fun_80A6h() { // 80A6h
     000080BE 7000           cmp       r0 #0h
     000080C0 C8F7           bne       -9h
     return false;
-} // pop pc
+} // ppc
 undefined fun_80C6h() { // 80C6h
     000080C6 F8CE           push      lr
     000080C8 F86E           push      xr8
@@ -11820,7 +11803,7 @@ undefined fun_98A6h() { // 98A6h
     0000997E 9089 0006      st        r0, 0006h[er8]
     00009982 9089 0007      st        r0, 0007h[er8]
     00009986 F81E           pop       er8
-} // pop pc
+} // ppc
 0000998A 0001           mov       r0 #1h
 0000998C CEDC           bal       -24h
 0000998E 0002           mov       r0 #2h
@@ -11964,7 +11947,7 @@ undefined ShowModeMenu() { // 9AECh; save er4
     SetMode(MODE_BASEN, 9);
     00009B48 0500           mov       r5 #0h
     00009B4A CEE5           bal       -1Bh
-} // pop pc
+} // ppc
 undefined fun_9B4Ch() { // 9B4Ch
 00009B4C F8CE           push      lr
 gad_LoadSpIntoEr14();
@@ -15301,7 +15284,7 @@ undefined unusedfun_BB86h() {
     0000BB88 A0E1 80FE      tb        80FEh.6
     0000BB8C C902           beq       +2h
     0000BB8E 0000           mov       r0 #0h
-} // pop pc
+} // ppc
 fun_3B96h();
 0000BB96 7002           cmp       r0 #2h
 0000BB98 C802           bne       +2h
@@ -16888,7 +16871,7 @@ char promptfun_6_ShowConstantInputScreen() { // CABEh; p/p er4;
 0000F820 0022           mov       r0 #22h
 
 void undefinedfun_F822h() {
-    SFR_BIASCON = 3;
+    SFR_F031h = 3;
     SFR_F00Ah = 0;
     SFR_IE0 = 0;
     SFR_IE1 = 0;
@@ -26245,7 +26228,7 @@ undefined diag_StartAllTests() { // 14B4A
     sp += 4;
     00014BE8 F83E           pop       qr8
     00014BEA F42E           pop       xr4
-} // pop pc
+} // ppc
 undefined diag_Keytest_001D() {
     diag_Keytest(0x001D);
 }
@@ -26313,7 +26296,7 @@ void _PrintStr_FontSize7_2Args(char param_1, int param_2) { // 14C6Eh; p1 = r0 -
 undefined diag_DisplayTest_SetPixels(char param_1) {  // 14C7Eh; p1 = r0
     SetAllPixels(param_1, 1);
     fun_14FEEh();
-} // pop pc
+} // ppc
 undefined diag_DisplayTest_PixelMatrix1() {
     diag_DisplayTest_DrawPixelMatrix(0x55);
 }
@@ -26363,7 +26346,7 @@ undefined diag_DisplayTest_DrawBox() {  // 14CD4h
     }
     fun_14FEEh();
     00014D16 F83E           pop       qr8
-} // pop pc
+} // ppc
 undefined fun_14D1Ah() {
     00014D1C F07E           push      qr0
     00014D1E F87E           push      qr8
@@ -26507,7 +26490,7 @@ undefined fun_14E8Ah() {
     00014ED0 F28E           pop       pc
     00014ED2 0002           mov       r0 #2h
     00014ED4 CEFC           bal       -4h
-} // pop pc
+} // ppc
 undefined diag_CalcChecksum() {   // 14ED6h; p/p qr8
     er8 = 0;
     er14 = 0;
@@ -33484,7 +33467,7 @@ void fun_192F2h(int* param_1) { // 192F2h; p1 = er0
     *ea+ = r8;
     *ea+ = r7;
     *ea+ = r6;
-} // pop pc
+} // ppc
 undefined fun_19312h() {
     00019312 F8CE           push      lr
     00019314 F02A           lea       [er2]

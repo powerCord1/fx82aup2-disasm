@@ -222,7 +222,7 @@ From	To		R/W		Description
 0xF025					TM0CON1
 0xF026	0xF02F			?
 0xF030					Set display range of the screen
-0xF031			R/W 	?
+0xF031			R/W 	0-3: display off, 4: matrix on, 5: normal, 6: lighter contrast
 0xF032			R/W 	DSPCNT
 0xF033			(3)		Contrast. 0-3: normal contrast, 4-7: decreasing contrast with 7 lightest, 4 darkest (but still lighter than normal contrast = 0)
 0xF034					Unknown SFRs

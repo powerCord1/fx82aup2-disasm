@@ -17575,7 +17575,7 @@
 0000CAF4 F28E           pop       pc
 
 
-; halt function in the middle of nowhere?
+; Probably meant to stop code execution when pc is set to an invalid address
 0000F822 E003           mov       er0, #3h
 0000F824 9011 F031      st        r0, F031h
 0000F828 9111 F00A      st        r1, F00Ah
